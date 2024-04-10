@@ -2,12 +2,12 @@ provider aws {
     region = "us-west-2"
 }
 
-data "aws_ami" "ubuntu" {
+data "aws_ami" "amazon-linux-2" {
     most_recent = true
     
     filter {
         name   = "name"
-        values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+        values = ["amzn2-ami-hvm-*-x86_64-ebs"]
     }
 
     filter {
@@ -15,7 +15,7 @@ data "aws_ami" "ubuntu" {
         values = ["hvm"]
     }
 
-  owners = ["099720109477"] # Canonical 
+  owners = ["amazon"] 
 }
 
 data "aws_availability_zones" "az" {
@@ -23,7 +23,7 @@ data "aws_availability_zones" "az" {
 }
 
 resource "aws_instance" "web" {
-    ami           = data.aws_ami.ubuntu.id
+    ami           = data.aws_ami.amazon-linux-2.id
     instance_type = var.instance_type
     #availability_zone = "us-west-2a"
     #availability_zone = data.aws_availability_zones.available.instance
