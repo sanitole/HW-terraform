@@ -29,14 +29,14 @@ resource "aws_instance" "web" {
     #availability_zone = data.aws_availability_zones.available.instance
     availability_zone = data.aws_availability_zones.az.names[count.index]
     #subnet_id = "subnet-0c7b246032e31379e"
-    vpc_security_group_ids = [aws_security_group.allow_tls.id]
+    vpc_security_group_ids = [aws_security_group.allow_tls_hw.id]
     key_name = aws_key_pair.deployer.key_name
     count = 3
     user_data = file("apache.sh")
     user_data_replace_on_change = true
     
     tags = {
-        Name = "web- ${count.index + 1}"
+        Name = "web- ${count.index + 1}" 
     }
 
 }

@@ -1,8 +1,7 @@
 #!/bin/bash
 
-sudo apt update -y
-sudo apt install apache2 -y
-sudo systemctl start apache2
-sudo systemctl enable apache2
-
-echo '<h1> Hello, World! </h1></body></html>' > /var/www/html/index.html
+sudo yum update
+sudo yum install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo echo "<h1> Hello, World! </h1>" >> /var/www/html/index.html
