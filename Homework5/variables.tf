@@ -3,14 +3,15 @@ variable "region" {
     type = string
     default = ""
 }
-# variable "ami_id" {
-#     description = "ami id"
-#     type = string
-#     default = ""
-# }
+variable "instance_name" {
+    description = "EC2 name"
+    type = list(string)
+}
 variable "instance_type" {
     description = "Instance type"
-    type = string
+    type = list(object({
+        type1 = string
+    }))
 }
 # variable "az" {
 #     description = "AZ to start the instance"
@@ -52,5 +53,10 @@ variable ip_on_launch {
     type = bool
     default = true
 }
-
-  
+variable "igw_name" {
+    type = string
+    default = ""
+}
+variable "rt_name" {
+    type = list(string)
+}

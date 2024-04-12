@@ -10,7 +10,7 @@ resource "aws_vpc" "kaizen" {
 resource "aws_subnet" "main" {
   vpc_id     = aws_vpc.kaizen.id
   cidr_block = var.subnet_cidr[0].cidr
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = var.ip_on_launch
   availability_zone = "${var.region}a"
 
   tags = {
@@ -47,50 +47,50 @@ resource "aws_subnet" "main4" {
     Name = var.subnet_cidr[3].subnet_name
   }
 }
-resource "aws_internet_gateway" "homework5-igw" {
+resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.kaizen.id
 
   tags = {
-    Name = "homework5-igw"
+    Name = var.igw_name
   }
 }
-resource "aws_route_table" "public-rt" {
+resource "aws_route_table" "rt" {
   vpc_id = aws_vpc.kaizen.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.homework5-igw.id
+    gateway_id = aws_internet_gateway.gw.id
   }
 
   tags = {
-    Name = "public-rt"
+    Name = var.rt_name[0]
   }
 }
-resource "aws_route_table" "private-rt" {
+resource "aws_route_table" "rt1" {
   vpc_id = aws_vpc.kaizen.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.homework5-igw.id
+    gateway_id = aws_internet_gateway.gw.id
   }
 
   tags = {
-    Name = "private-rt"
+    Name = var.rt_name[1]
   }
 }
 resource "aws_route_table_association" "a" {
   subnet_id      = aws_subnet.main.id
-  route_table_id = aws_route_table.public-rt.id
+  route_table_id = aws_route_table.rt.id
 }
 resource "aws_route_table_association" "b" {
   subnet_id      = aws_subnet.main2.id
-  route_table_id = aws_route_table.public-rt.id
+  route_table_id = aws_route_table.rt.id
 }
 resource "aws_route_table_association" "c" {
   subnet_id      = aws_subnet.main3.id
-  route_table_id = aws_route_table.private-rt.id
+  route_table_id = aws_route_table.rt1.id
 }
 resource "aws_route_table_association" "d" {
   subnet_id      = aws_subnet.main4.id
-  route_table_id = aws_route_table.private-rt.id
+  route_table_id = aws_route_table.rt1.id
 }

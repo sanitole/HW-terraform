@@ -13,16 +13,19 @@ data "aws_ami" "ubuntu" {
 }
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id 
-  instance_type = var.instance_type
+  instance_type = var.instance_type[0].type
   subnet_id = aws_subnet.main.id
   vpc_security_group_ids = [aws_security_group.allow_tls_hw.id]
   user_data = file("apache-U.sh")
   
+  tags = {
+        Name = var.instance_name[0]
+    }
+
 }
 output ec2 {
   value       = aws_instance.web.public_ip
 }
-
 
 data "aws_ami" "amazon-linux-2" {
     most_recent = true
@@ -45,13 +48,16 @@ data "aws_ami" "amazon-linux-2" {
 # }
 
 resource "aws_instance" "web1" {
-    ami           = data.aws_ami.amazon-linux-2.id
-    instance_type = var.instance_type
-    #availability_zone = data.aws_availability_zones.az.names[count.index]
-    subnet_id = aws_subnet.main2.id
-    vpc_security_group_ids = [aws_security_group.allow_tls_hw.id]
-    user_data = file("apache-L.sh")
-    
+  ami           = data.aws_ami.amazon-linux-2.id
+  instance_type = var.instance_type[0].type
+  #availability_zone = data.aws_availability_zones.az.names[count.index]
+  subnet_id = aws_subnet.main2.id
+  vpc_security_group_ids = [aws_security_group.allow_tls_hw.id]
+  user_data = file("apache-L.sh")
+
+  tags = {
+    Name = var.instance_name[1] 
+  }
 }
 output ec2-2 {
   value = aws_instance.web1.public_ip
