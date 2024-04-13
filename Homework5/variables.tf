@@ -3,26 +3,14 @@ variable "region" {
     type = string
     default = ""
 }
-variable "instance_name" {
-    description = "EC2 name"
-    type = list(string)
-}
-variable "instance_type" {
-    description = "Instance type"
+variable "create_instance" {
+    description = "EC2 name and type"
     type = list(object({
-        type1 = string
+        ec2_name = string
+        ec2_type = string
     }))
 }
-# variable "az" {
-#     description = "AZ to start the instance"
-#     type = string
-#     default = ""
-# }
-# variable "security_groups" {
-#   description = "A list of security group IDs to associate with"
-#   type        = string
-#   default     = ""
-# }
+
 variable "server_ports" {
     description = "A list of port range"
     type = list(object({
@@ -30,23 +18,21 @@ variable "server_ports" {
         port_name = string
     }))
 }
-variable "vpc_cidr" {
+variable "vpc_details" {
     description = "Provide a vpc cidr block"
-    type = string
+    type = list(object({
+        vpc_cidr = string
+        enable_dns_support = bool
+        enable_dns_hostnames = bool
+    }))
 }
-variable "enable_dns_support" {
-    type = bool
-    default = true
-}
-variable "enable_dns_hostnames" {
-    type = bool
-    default = true
-}
+
 variable subnet_cidr {
     description = "Provide a subnet cidr block"
     type = list(object({
         cidr = string
         subnet_name = string
+        av_zone = string
     }))
 }
 variable ip_on_launch {

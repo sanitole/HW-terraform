@@ -13,13 +13,14 @@ data "aws_ami" "ubuntu" {
 }
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id 
-  instance_type = var.instance_type[0].type
+  instance_type = var.create_instance[0].ec2_type
   subnet_id = aws_subnet.main.id
   vpc_security_group_ids = [aws_security_group.allow_tls_hw.id]
   user_data = file("apache-U.sh")
+  user_data_replace_on_change = true
   
   tags = {
-        Name = var.instance_name[0]
+        Name = var.create_instance[0].ec2_name
     }
 
 }
@@ -31,13 +32,13 @@ data "aws_ami" "amazon-linux-2" {
     most_recent = true
     
     filter {
-        name   = "name"
-        values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+      name   = "name"
+      values = ["amzn2-ami-hvm-*-x86_64-ebs"]
     }
 
     filter {
-        name   = "virtualization-type"
-        values = ["hvm"]
+      name   = "virtualization-type"
+      values = ["hvm"]
     }
 
   owners = ["amazon"] 
@@ -49,14 +50,15 @@ data "aws_ami" "amazon-linux-2" {
 
 resource "aws_instance" "web1" {
   ami           = data.aws_ami.amazon-linux-2.id
-  instance_type = var.instance_type[0].type
+  instance_type = var.create_instance[1].ec2_type
   #availability_zone = data.aws_availability_zones.az.names[count.index]
   subnet_id = aws_subnet.main2.id
   vpc_security_group_ids = [aws_security_group.allow_tls_hw.id]
   user_data = file("apache-L.sh")
+  user_data_replace_on_change = true
 
   tags = {
-    Name = var.instance_name[1] 
+    Name = var.create_instance[1].ec2_name 
   }
 }
 output ec2-2 {

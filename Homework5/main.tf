@@ -2,17 +2,16 @@ provider "aws" {
     region = var.region
 }
 resource "aws_vpc" "kaizen" {
-    cidr_block = var.vpc_cidr
-    enable_dns_support   = var.enable_dns_support
-    enable_dns_hostnames = var.enable_dns_hostnames
+    cidr_block = var.vpc_details[0].vpc_cidr
+    enable_dns_support   = var.vpc_details[0].enable_dns_support
+    enable_dns_hostnames = var.vpc_details[0].enable_dns_hostnames
 }
 
 resource "aws_subnet" "main" {
   vpc_id     = aws_vpc.kaizen.id
   cidr_block = var.subnet_cidr[0].cidr
   map_public_ip_on_launch = var.ip_on_launch
-  availability_zone = "${var.region}a"
-
+  availability_zone = var.subnet_cidr[0].av_zone
   tags = {
     Name = var.subnet_cidr[0].subnet_name
   }
@@ -21,7 +20,7 @@ resource "aws_subnet" "main2" {
   vpc_id     = aws_vpc.kaizen.id
   cidr_block = var.subnet_cidr[1].cidr
   map_public_ip_on_launch = var.ip_on_launch
-  availability_zone = "${var.region}b"
+  availability_zone =  var.subnet_cidr[1].av_zone
 
   tags = {
     Name = var.subnet_cidr[1].subnet_name
@@ -31,7 +30,7 @@ resource "aws_subnet" "main3" {
   vpc_id     = aws_vpc.kaizen.id
   cidr_block = var.subnet_cidr[2].cidr
   map_public_ip_on_launch = var.ip_on_launch
-  availability_zone = "${var.region}c"
+  availability_zone =  var.subnet_cidr[2].av_zone
 
   tags = {
     Name = var.subnet_cidr[2].subnet_name
@@ -41,7 +40,7 @@ resource "aws_subnet" "main4" {
   vpc_id     = aws_vpc.kaizen.id
   cidr_block = var.subnet_cidr[3].cidr
   map_public_ip_on_launch = var.ip_on_launch
-  availability_zone = "${var.region}d"
+  availability_zone =  var.subnet_cidr[3].av_zone
 
   tags = {
     Name = var.subnet_cidr[3].subnet_name
