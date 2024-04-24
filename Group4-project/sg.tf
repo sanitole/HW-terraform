@@ -1,7 +1,7 @@
 resource "aws_security_group" "group-4" {
   name        = "group-4"
   description = "Allow inbound traffic range 22,80"
-  vpc_id      = aws_vpc.project.id
+  vpc_id      = aws_vpc.group-4.id
 
   ingress {
     from_port   = var.server_ports[1].range

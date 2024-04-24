@@ -32,9 +32,14 @@ variable "server_ports" {
     port_name = string
   }))
 }
-variable "vpc_general" {
+variable "vpc_details" {
   description = "Provide a vpc cidr block"
-  type = list(string)
+  type = list(object({
+    vpc_cidr             = string
+    enable_dns_support   = bool
+    enable_dns_hostnames = bool
+     vpc_name = string
+  }))
 }
 variable "subnet_cidr" {
   description = "Provide a subnet cidr block"
@@ -69,44 +74,60 @@ variable "lb_target_group" {
   }))
 }
 
-# variable "enable_blue_env" {
-#   description = "Enable blue environment"
-#   type        = bool
-#   default     = true
-# }
-# variable "enable_green_env" {
-#   description = "Enable green environment"
-#   type        = bool
-#   default     = true
-# }
+variable "enable_blue_env" {
+  description = "Enable blue environment"
+  type        = bool
+  default     = true
+}
+variable "blue_instance_count" {
+  description = "Number of instances in blue environment"
+  type        = number
+  default     = 2
+}
+variable "enable_green_env" {
+  description = "Enable green environment"
+  type        = bool
+  default     = false
+}
+variable "green_instance_count" {
+  description = "Number of instances in green environment"
+  type        = number
+  default     = 2
+}
 
+variable "traffic_distribution" {
+  description = "Levels of traffic distribution"
+  type        = string
+}
 
-# locals {
-#   traffic_dist_map = {
-#     blue = {
-#       blue  = 100
-#       green = 0
-#     }
-#     blue-90 = {
-#       blue  = 90
-#       green = 10
-#     }
-#     split = {
-#       blue  = 50
-#       green = 50
-#     }
-#     green-90 = {
-#       blue  = 10
-#       green = 90
-#     }
-#     green = {
-#       blue  = 0
-#       green = 100
-#     }
-#   }
-# }
+locals {
+#   subnets = [
+#     aws_subnet.main.id,
+#     aws_subnet.main2.id,
+#     aws_subnet.main3.id
+# ]
 
-# variable "traffic_distribution" {
-#   description = "Levels of traffic distribution"
-#   type        = string
-# }
+  traffic_dist_map = {
+    blue = {
+      blue  = 100
+      green = 0
+    }
+    blue-90 = {
+      blue  = 90
+      green = 10
+    }
+    split = {
+      blue  = 50
+      green = 50
+    }
+    green-90 = {
+      blue  = 10
+      green = 90
+    }
+    green = {
+      blue  = 0
+      green = 100
+    }
+  }
+}
+
