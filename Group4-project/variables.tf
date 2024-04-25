@@ -38,7 +38,7 @@ variable "vpc_details" {
     vpc_cidr             = string
     enable_dns_support   = bool
     enable_dns_hostnames = bool
-     vpc_name = string
+    vpc_name             = string
   }))
 }
 variable "subnet_cidr" {
@@ -73,6 +73,14 @@ variable "lb_target_group" {
     lb_tg_protocol = string
   }))
 }
+variable "lb_details" {
+  description = "Provide LB block"
+  type = list(object({
+    lb_name              = string
+    lb_listener_port     = string
+    lb_listener_protocol = string
+  }))
+}
 
 variable "enable_blue_env" {
   description = "Enable blue environment"
@@ -101,12 +109,6 @@ variable "traffic_distribution" {
 }
 
 locals {
-#   subnets = [
-#     aws_subnet.main.id,
-#     aws_subnet.main2.id,
-#     aws_subnet.main3.id
-# ]
-
   traffic_dist_map = {
     blue = {
       blue  = 100

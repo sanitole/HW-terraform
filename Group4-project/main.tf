@@ -18,6 +18,7 @@ resource "aws_vpc" "group-4" {
   enable_dns_support   = var.vpc_details[0].enable_dns_support
   enable_dns_hostnames = var.vpc_details[0].enable_dns_hostnames
   instance_tenancy     = "default"
+
   tags = {
     Name = var.vpc_details[0].vpc_name
   }
@@ -86,7 +87,7 @@ resource "aws_route_table_association" "c" {
 }
 
 resource "aws_lb" "blue-green-deployment" {
-  name               = var.lb_target_group[0].lb_tg_name
+  name               = var.lb_details[0].lb_name
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.group-4.id]
@@ -98,10 +99,10 @@ resource "aws_lb" "blue-green-deployment" {
 }
 
 
-resource "aws_lb_listener" "blue-green-deployment1" {
+resource "aws_lb_listener" "blue-green-deployment" {
   load_balancer_arn = aws_lb.blue-green-deployment.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = var.lb_details[0].lb_listener_port
+  protocol          = var.lb_details[0].lb_listener_protocol
 
 
   default_action {

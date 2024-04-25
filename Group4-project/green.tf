@@ -1,21 +1,18 @@
 resource "aws_instance" "green" {
   count                  = var.enable_green_env ? var.green_instance_count : 0
-  ami                         = data.aws_ami.amazon-linux-2.id
-  instance_type               = var.create_instance[1].ec2_type
-  subnet_id                   = aws_subnet.main3.id
-  vpc_security_group_ids      = [aws_security_group.group-4.id]
-  user_data                   = file("green.sh") 
-#   {
-#   file_content = "version 1.0 - ${count.index}"
-#   })
+  ami                    = data.aws_ami.amazon-linux-2.id
+  instance_type          = var.create_instance[1].ec2_type
+  subnet_id              = aws_subnet.main3.id
+  vpc_security_group_ids = [aws_security_group.group-4.id]
+  user_data              = file("green.sh")
+  #   {
+  #   file_content = "version 1.0 - ${count.index}"
+  #   })
 
   tags = {
     Name = var.create_instance[1].ec2_name
   }
 }
-# output ec2-2 {
-#   value = aws_instance.green.public_ip
-# }
 
 resource "aws_lb_target_group" "green" {
   name     = var.lb_target_group[1].lb_tg_name
@@ -31,7 +28,7 @@ resource "aws_lb_target_group" "green" {
     interval = 10
   }
 }
-resource "aws_lb_target_group_attachment" "green-group-4" {
+resource "aws_lb_target_group_attachment" "green" {
   count            = length(aws_instance.green)
   target_group_arn = aws_lb_target_group.green.arn
   target_id        = aws_instance.green[count.index].id
@@ -41,12 +38,3 @@ resource "aws_lb_target_group_attachment" "green-group-4" {
     aws_instance.green
   ]
 }
-# resource "aws_lb_listener" "listener_elb1" {
-#   load_balancer_arn = aws_lb.blue-green-deployment.arn
-#   port              = var.lb_target_group[1].lb_tg_port
-#   protocol          = var.lb_target_group[1].lb_tg_protocol
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.green.arn
-#   }
-# }
