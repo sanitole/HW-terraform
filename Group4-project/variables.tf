@@ -29,7 +29,7 @@ variable "server_ports" {
   description = "A list of port range"
   type = list(object({
     from_port = number
-    to_port = number
+    to_port   = number
   }))
 }
 variable "vpc_details" {

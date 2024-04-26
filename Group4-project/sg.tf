@@ -3,7 +3,7 @@ resource "aws_security_group" "group-4" {
   description = "Allow inbound traffic range 22,80"
   vpc_id      = aws_vpc.group-4.id
 
-   dynamic "ingress" {
+  dynamic "ingress" {
 
     for_each = var.server_ports
     content {
@@ -14,7 +14,7 @@ resource "aws_security_group" "group-4" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
-  
+
   egress {
     from_port   = 0
     to_port     = 0
