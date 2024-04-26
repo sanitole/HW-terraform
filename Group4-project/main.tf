@@ -98,7 +98,6 @@ resource "aws_lb" "blue-green-deployment" {
   ]
 }
 
-
 resource "aws_lb_listener" "blue-green-deployment" {
   load_balancer_arn = aws_lb.blue-green-deployment.arn
   port              = var.lb_details[0].lb_listener_port

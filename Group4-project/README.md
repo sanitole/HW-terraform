@@ -1,5 +1,7 @@
 # HW-terraform
 
+## Create blue/green deployment using module block in main.tf:
+
 ```hcl
 region   = "us-east-2"
 key_name = "Bastion-key"
@@ -20,9 +22,9 @@ subnet_cidr = [
   { cidr = "10.0.3.0/24", subnet_name = "group4_subnet3", av_zone = "us-east-2c" }
 ]
 server_ports = [
-  { range = "22", port_name = "SSH" },
-  { range = "80", port_name = "HTTP" },
-  { range = "443", port_name = "HTTPS" }
+  { from_port = 22, to_port = 22 },
+  { from_port = 80, to_port = 80 },
+  { from_port = 443, to_port = 443 }  # Provide list of ports             
 ]
 igw_name = "group-4-igw"
 rt_name  = "group-4-rt"
@@ -37,4 +39,68 @@ lb_target_group = [
 ]
 enable_blue_env = true
 enable_green_env = false
+```
+
+## Create EC2 instances for blue and green deployment (blue.tf, green.tf), two for each to make it highly available. And input user data for each instance creating blue.sh and green.sh files.
+
+```hcl
+# for blue
+
+#!/bin/bash
+sudo yum update -y
+sudo yum install -y httpd
+sudo systemctl start httpd
+sudo systemctl enable httpd
+echo '<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <style>
+        body { background-color: #0000FF; } /* Sets background to blue */
+        h1 { color: white; text-align: center; }
+        p { color: white; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Blue Server!</h1>
+    <p>This is a blue-themed page served from $(hostname -f).</p>
+</body>
+</html>' | sudo tee /var/www/html/index.html > /dev/null
+```
+
+```hcl
+#for green
+
+#!/bin/bash
+sudo yum update -y
+sudo yum install -y httpd
+sudo systemctl start httpd
+sudo systemctl enable httpd
+echo '<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <style>
+        body { background-color: #00FF00; } /* Sets background to green */
+        h1 { color: white; text-align: center; }
+        p { color: white; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Green Server!</h1>
+    <p>This is a green-themed page served from $(hostname -f).</p>
+</body>
+</html>' | sudo tee /var/www/html/index.html > /dev/null
+```
+## Manually create S3 bucket with unique name "any_name" and store your state file in a remote backend, you can also lock your state file by using DynamoDB table.
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = "group-4-project"
+    key    = "ohio/terraform.tfstate"
+    region = "us-east-2"
+    #dynamodb_table = "lock-state"
+  }
+}
 ```

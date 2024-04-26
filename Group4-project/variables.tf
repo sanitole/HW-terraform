@@ -28,8 +28,8 @@ variable "create_instance" {
 variable "server_ports" {
   description = "A list of port range"
   type = list(object({
-    range     = string
-    port_name = string
+    from_port = number
+    to_port = number
   }))
 }
 variable "vpc_details" {
