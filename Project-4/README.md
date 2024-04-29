@@ -5,6 +5,8 @@
 ```hcl
 
 module "vpc" {
+  source = "sanitole/"
+  version = ""
   region   = "us-east-2"
   key_name = "Bastion-key"
   create_instance = [
