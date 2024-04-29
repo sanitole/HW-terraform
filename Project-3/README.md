@@ -2,7 +2,7 @@
 ## WordPress with RDS
 ## Create main.tf and input following:
 ```hcl
-module "vpc" {
+ "vpc" {
     source = "sanitole/"
     version = ""
     region   = "us-east-2"

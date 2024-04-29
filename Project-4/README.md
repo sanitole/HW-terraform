@@ -4,7 +4,7 @@
 
 ```hcl
 
-module "vpc" {
+ "vpc" {
   source = "sanitole/"
   version = ""
   region   = "us-east-2"
