@@ -5,7 +5,7 @@ resource "aws_security_group" "group-2" {
 
   dynamic "ingress" {
 
-    for_each = var.server_ports
+    for_each = var.ports
     content {
       description = "TLS from VPC"
       from_port   = ingress.value.from_port

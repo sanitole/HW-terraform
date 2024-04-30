@@ -55,7 +55,7 @@ resource "aws_instance" "app" {
   instance_type          = "t2.micro"
   key_name               = var.key_name
   subnet_id              = aws_subnet.public_subnet.id
-  vpc_security_group_ids = [aws_security_group.group-3.id]
+  vpc_security_group_ids = [aws_security_group.group-2.id]
 
   iam_instance_profile = aws_iam_instance_profile.prometheus_demo.name
 
