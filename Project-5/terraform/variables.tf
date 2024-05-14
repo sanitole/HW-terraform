@@ -25,3 +25,6 @@ variable instance_type {
     type = string
     description = "Provide instance type"
 }
+variable instance_ssh_priv_key {
+  type = string
+}

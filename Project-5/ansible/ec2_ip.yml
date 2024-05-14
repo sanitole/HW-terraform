@@ -1,0 +1,26 @@
+- name: Add host to group 'just_created' with variable foo=42
+  ansible.builtin.add_host:
+    name: '{{ ip_from_ec2 }}'
+    groups: just_created
+    foo: 42
+
+
+
+
+#or
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+   - add_host:
+        name: '{{ new_host }}'
+     args: '{{ new_host_vars }}'
+  vars:
+    new_host: foo
+    new_host_vars:
+      foo_var: play
+- hosts: foo
+  gather_facts: no
+  tasks:
+  - debug: var=foo_var
+    delegate_to: localhost

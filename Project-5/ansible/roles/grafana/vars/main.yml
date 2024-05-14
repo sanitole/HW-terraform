@@ -1,2 +1,4 @@
 ---
-# vars file for grafana
+#monitor_ip: "{{ grafana_ip }}"
+#grafana_user: admin
+grafana_admin_password: "admin1234"

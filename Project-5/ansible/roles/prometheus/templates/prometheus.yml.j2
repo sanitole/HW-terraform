@@ -1,0 +1,16 @@
+
+#jinja2: lstrip_blocks: "True"
+{{ prometheus_var_config | to_nice_yaml(indent=2) }}
+{% if prometheus_node_exporter_group %}
+- job_name: prometheus
+  scrape_interval: 15s
+  metrics_path: /metrics
+  static_configs:
+    - targets:
+    {% for host in groups[prometheus_node_exporter_group] %}
+    - '{{ host }}:9100'
+    {% endfor %}
+    {% endif %}
+
+rule_files:
+  - alert.rules.yml
