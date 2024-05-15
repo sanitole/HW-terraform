@@ -28,3 +28,6 @@ variable instance_type {
 variable instance_ssh_priv_key {
   type = string
 }
+variable pub_key {
+  type = string
+}

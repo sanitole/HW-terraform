@@ -23,7 +23,11 @@ resource "aws_instance" "web" {
   associate_public_ip_address = true
 
   provisioner "remote-exec" {
-    inline = ["sudo apt update", "sudo apt install python3 -y", "echo Done!"]
+    inline = [
+      "sudo apt update", 
+      "sudo apt install python3 -y",
+      "echo Done!"
+      ]
 
     connection {
       host        = "${self.ipv4_address}"

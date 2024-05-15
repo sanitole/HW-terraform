@@ -1,4 +1,4 @@
-- name: "Install and config prometheus and grafana"
+- name: Install and config prometheus and grafana
   hosts: all
   become: true
   # vars:
@@ -8,7 +8,10 @@
     - prometheus
     - grafana
 
-- name: "install and configure Node exporter"
+- name: Install and configure Node exporter
   become: true
   roles:
     - node-exporter
+
+- name: Add Ec2 instance public IP
+  include_tasks: ec2_ip.yml

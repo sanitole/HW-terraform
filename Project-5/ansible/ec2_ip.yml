@@ -1,26 +1,39 @@
-- name: Add host to group 'just_created' with variable foo=42
-  ansible.builtin.add_host:
-    name: '{{ ip_from_ec2 }}'
-    groups: just_created
-    foo: 42
-
-
-
+# - name: Add host to group 'Ubuntu-ec2' with variable foo=42
+#   ansible.builtin.add_host:
+#     name: '{{ ip_from_ec2 }}'
+#     groups: Ubuntu-ec2
+#     foo: 42
 
 #or
 
-- hosts: localhost
-  gather_facts: no
-  tasks:
-   - add_host:
-        name: '{{ new_host }}'
-     args: '{{ new_host_vars }}'
-  vars:
-    new_host: foo
-    new_host_vars:
-      foo_var: play
-- hosts: foo
-  gather_facts: no
-  tasks:
-  - debug: var=foo_var
-    delegate_to: localhost
+- name: output the IP
+  ansible.builtin.debug:
+    msg: "Allocated IP inside a VPC is {{ eip.public_ip }}"
+
+#or
+
+# - hosts: localhost
+#   gather_facts: no
+#   tasks:
+#    - add_host:
+#         name: '{{ new_host }}'
+#      args: '{{ new_host_vars }}'
+#   vars:
+#     new_host: foo
+#     new_host_vars:
+#       foo_var: play
+# - hosts: foo
+#   gather_facts: no
+#   tasks:
+#   - debug: var=foo_var
+#     delegate_to: localhost
+
+- name: Add IP address of all hosts to all hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: "{{ hostvars[item].ansible_host }} {{item}}"
+    state: present
+  when: hostvars[item].ansible_host is defined
+  with_items: "{{ groups.all }}"
+
